@@ -8,7 +8,39 @@ run the program from the command line. The output is n files sequentially number
 generated image. Have fun!
 
 ```
-$ julia makestrange.jl
+$ julia makestrange.jl -h
+usage: makestrange.jl [--basename BASENAME] [--a A] [--b B] [--c C]
+                      [--d D] [--e E] [--n N] [--res RES] [--rc RC]
+                      [--gc GC] [--bc BC] [--dot_max DOT_MAX]
+                      [--dot_min DOT_MIN] [-h]
+
+optional arguments:
+  --basename BASENAME  strange image and json basename (default:
+                       "regenerate.png")
+  --a A                a control point range (type: Float64, default:
+                       5.0)
+  --b B                b control point range (type: Float64, default:
+                       10.0)
+  --c C                c control point range (type: Float64, default:
+                       5.0)
+  --d D                d control point range (type: Float64, default:
+                       10.0)
+  --e E                e control point range (type: Float64, default:
+                       5.0)
+  --n N                number of images to generate (type: Int64,
+                       default: 1)
+  --res RES            image w x w res (type: Int64, default: 1000)
+  --rc RC              rgb r  color weight (type: Float64, default:
+                       2.13)
+  --gc GC              rgb g color weight (type: Float64, default:
+                       0.13)
+  --bc BC              rgb b color weight (type: Float64, default:
+                       2.83)
+  --dot_max DOT_MAX    max dotsize (type: Float64, default: 0.65)
+  --dot_min DOT_MIN    min dotsize (type: Float64, default: 0.35)
+  -h, --help           show this help message and exit
+
+
 ````
 
 You can edit the json file and regenerate an image using the `generate.jl` program:
