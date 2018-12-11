@@ -1,7 +1,17 @@
 using Luxor, Colors
 using Printf
+using JSON
 
 include("strange.jl")
+
+
+struct StrangeSet
+	ctrl_params::Dict{Symbol,Float64}
+	dot_size::Float64
+	res::Int64
+	color_profile::Dict{Symbol,Float64}
+	filename::String
+end
 
 # parameters controls
 a_range = 5.0
@@ -11,7 +21,7 @@ d_range = 10.0
 e_range = 5.0
 
 # image size:res x res 
-res = 5_000
+res = 1_000
 
 # number of images to generate
 n = 1
@@ -39,19 +49,17 @@ for i in 1:n
 	end
 
 	fn = @sprintf("%s_%-2.2d.png", basename, i)
-	fn_ctrl = @sprintf("%s_%-2.2d.ctrl", basename, i)
+	fn_ctrl = @sprintf("%s_%-2.2d.json", basename, i)
 
 	cf = open(fn_ctrl, "w")
-	write(cf, @sprintf("Filename: %s\n", fn))
-
-	params = @sprintf("Params: a=%-2.4f, b=%-2.4f, c=%-2.4f, d=%-2.4f, e=%-2.4f, res=%-2.2d, dotsize = %-2.4f\n",
-			   a, b, c, d, ev, res, dotsize)
-	write(cf, params)
-
-	write(cf, @sprintf("Color Profile: [%f, %f, %f]\n", color_profile[:r], color_profile[:g], color_profile[:b]))
+	sset = StrangeSet(Dict([:a=>a, :b=>b, :c=>c, :d=>d, :e=>ev]), dotsize, res, color_profile, fn)
+	JSON.print(cf, JSON.parse(JSON.json(sset)), 4)
 	close(cf)
+
+	params = @sprintf("Params: a=%-2.16f, b=%-2.16f, c=%-2.16f, d=%-2.16f, e=%-2.16f, res=%-2.2d, dotsize = %-2.16f\n",
+	   a, b, c, d, ev, res, dotsize)
 	println("$params")
 
-	strange(fn, dotsize, res, Dict([:a=>a,:b=>b, :c=>c, :d=>c, :e=>ev]), color_profile)
+	strange(fn, dotsize, res, Dict([:a=>a,:b=>b, :c=>c, :d=>d, :e=>ev]), color_profile)
 	println("finished generating $fn")
 end
