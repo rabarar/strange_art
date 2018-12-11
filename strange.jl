@@ -3,7 +3,8 @@
 # Rob Baruch, 2018
 #
 
-using Luxor, Colors
+using Luxor, Colors, ProgressMeter
+
 function rs()
 	(-1.0)^convert(Int64,floor((rand()*1000.0))) % 2
 end
@@ -21,8 +22,14 @@ function strange(fn, dotsize, w=800.0,
            # control parameters
            x = y = z = 0.0
            wover2 = w/2
+	   p = Progress(w*w, 1)
+	   count = 0 
            for j in 1:w
                for i in 1:w
+
+		   count += 1
+		   update!(p, count)
+
 		   xx = sin(ctrl[:a] * y) - z  *  cos(ctrl[:b] * x)
 		   yy = z * sin(ctrl[:c] * x) - cos(ctrl[:d] * y)
                    zz = ctrl[:e] * sin(x)
@@ -39,6 +46,7 @@ function strange(fn, dotsize, w=800.0,
                    end
                end
            end
+	   println()
            finish()
        end
 
