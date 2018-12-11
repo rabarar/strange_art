@@ -5,4 +5,4 @@ deps/deps.jl
 
 
 *.png
-*.ctrl
+*.json

@@ -1,8 +1,25 @@
 using Luxor, Colors
 using Printf
 using JSON
+using ArgParse
 
 include("strange.jl")
+
+function parse_commandline()
+    settings = ArgParseSettings()
+
+    @add_arg_table settings begin
+        "--infile"
+            help = "parameter input filename"
+            arg_type = String
+            default = "params.json"
+        "--outfile"
+            help = "strange image output filename"
+            default = "regenerate.png"
+    end
+
+    return parse_args(settings)
+end
 
 
 struct StrangeSet
@@ -15,33 +32,42 @@ end
 
 # generate n png images
 
-sp = JSON.parsefile("strange_01.json")
+function main()
+	parsed_args = parse_commandline()
 
-ctrl_params = Dict([
-		    :a => sp["ctrl_params"]["a"],
-		    :b => sp["ctrl_params"]["b"],
-		    :c => sp["ctrl_params"]["c"],
-		    :d => sp["ctrl_params"]["d"],
-		    :e => sp["ctrl_params"]["e"]])
+	infile = parsed_args["infile"]
+	outfile = parsed_args["outfile"]
+	println("ctrl file: $infile")
+	println("outputfile: $outfile")
 
-dot_size = sp["dot_size"]
-res = sp["res"]
-color_profile = Dict([
-		      :r => sp["color_profile"]["r"],
-		      :g => sp["color_profile"]["g"],
-		      :b => sp["color_profile"]["b"]])
+	sp = JSON.parsefile(infile)
 
-filename = "regen" * sp["filename"]
+	ctrl_params = Dict([
+			    :a => sp["ctrl_params"]["a"],
+			    :b => sp["ctrl_params"]["b"],
+			    :c => sp["ctrl_params"]["c"],
+			    :d => sp["ctrl_params"]["d"],
+			    :e => sp["ctrl_params"]["e"]])
 
-params = @sprintf("Params: a=%-2.16f, b=%-2.16f, c=%-2.16f, d=%-2.16f, e=%-2.16f, res=%-2.2d, dotsize = %-2.16f\n",
-		  ctrl_params[:a],
-		  ctrl_params[:b],
-		  ctrl_params[:c],
-		  ctrl_params[:d],
-		  ctrl_params[:e],
-		  res,
-		  dot_size)
-println("$params")
+	dot_size = sp["dot_size"]
+	res = sp["res"]
+	color_profile = Dict([
+			      :r => sp["color_profile"]["r"],
+			      :g => sp["color_profile"]["g"],
+			      :b => sp["color_profile"]["b"]])
 
-strange(filename, dot_size, res, ctrl_params, color_profile)
-println("finished generating $filename")
+	params = @sprintf("Params: a=%-2.16f, b=%-2.16f, c=%-2.16f, d=%-2.16f, e=%-2.16f, res=%-2.2d, dotsize = %-2.16f\n",
+			  ctrl_params[:a],
+			  ctrl_params[:b],
+			  ctrl_params[:c],
+			  ctrl_params[:d],
+			  ctrl_params[:e],
+			  res,
+			  dot_size)
+	println("$params")
+
+	strange(outfile, dot_size, res, ctrl_params, color_profile)
+	println("finished generating $outfile")
+end
+
+main()
