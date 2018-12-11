@@ -46,7 +46,7 @@ function strange(fn, dotsize, w=800.0,
                    end
                end
            end
-	   println()
+	   println("cleaning up...")
            finish()
        end
 
