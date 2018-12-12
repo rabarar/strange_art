@@ -5,10 +5,20 @@
 
 using Luxor, Colors, ProgressMeter
 
+struct StrangeSet
+	ctrl_params::Dict{Symbol,Float64}
+	dot_size::Float64
+	res::Int64
+	color_profile::Dict{Symbol,Float64}
+	filename::String
+	flip::Bool
+	clamp::Bool
+end
+
 function rs()
 	(-1.0)^convert(Int64,floor((rand()*1000.0))) % 2
 end
-function strange(fn, flip, dotsize, w=800.0,
+function strange(fn, flip, clamp, dotsize, w=800.0,
 		 ctrl=Dict([:a=>2.24 + rs()*rand()*0.5, :b=>0.43, :c => -0.65, :d=>-2.43 + rs()*rand()*0.25, :e=> 1.0]),
 		 colors=Dict([:r=>.7, :g=>0.5, :b=>.8]),
 		 mode=:fill)
@@ -47,10 +57,16 @@ function strange(fn, flip, dotsize, w=800.0,
                        xpos = rescale(xx, xmin, xmax, -wover2, wover2) # scale to range
                        ypos = rescale(yy, ymin, ymax, -wover2, wover2) # scale to range
 
-		       rcolor = rescale(xx, -1, 1, 0.0, colors[:r])
-		       gcolor = rescale(yy, -1, 1, 0.0, colors[:g])
-		       bcolor = rescale(zz, -1, 1, 0.0, colors[:b])
-                       setcolor(convert(Colors.HSV, Colors.RGB(rcolor, gcolor, bcolor)))
+		       if !clamp
+			       rcolor = rescale(xx, -1, 1, 0.0, colors[:r])
+			       gcolor = rescale(yy, -1, 1, 0.0, colors[:g])
+			       bcolor = rescale(zz, -1, 1, 0.0, colors[:b])
+			       setcolor(convert(Colors.HSV, Colors.RGB(rcolor, gcolor, bcolor)))
+		       else
+			       rcolor = rescale(xx, -1, 1, 0.0, colors[:r])
+			       gcolor = rescale(yy, -1, 1, 0.0, colors[:g])
+			       setcolor(convert(Colors.HSV, Colors.RGB(rcolor, gcolor, gcolor)))
+		       end
                        circle(Point(xpos, ypos), dotsize, mode)
                    end
                end
