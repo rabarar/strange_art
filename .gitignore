@@ -6,3 +6,5 @@ deps/deps.jl
 
 *.png
 *.json
+
+portfolio/*

@@ -21,7 +21,7 @@ function parse_commandline()
     @add_arg_table settings begin
         "--basename"
             help = "strange image and json basename"
-            default = "regenerate.png"
+            default = "strange"
 	"--a"
 	    help = "a control point range"
 	    arg_type = Float64
