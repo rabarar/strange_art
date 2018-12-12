@@ -12,6 +12,7 @@ struct StrangeSet
 	res::Int64
 	color_profile::Dict{Symbol,Float64}
 	filename::String
+	flip::Bool
 end
 
 function parse_commandline()
@@ -69,6 +70,10 @@ function parse_commandline()
 	    help = "min dotsize"
 	    arg_type = Float64
 	    default = .35
+	"--flip"
+	    help = "flip sin and cos in the calculations"
+	    arg_type = Bool
+	    default = false
     end
 
     return parse_args(settings)
@@ -100,6 +105,9 @@ function main()
 			    :b=>parsed_args["bc"]
 			    ])
 
+	# toggle trig functions
+	flip = parsed_args["flip"]
+
 	# generate n png images
 	for i in 1:n
 		a = b = c = d = ev = 0
@@ -122,15 +130,15 @@ function main()
 		fn_ctrl = @sprintf("%s_%-2.2d.json", basename, i)
 
 		cf = open(fn_ctrl, "w")
-		sset = StrangeSet(Dict([:a=>a, :b=>b, :c=>c, :d=>d, :e=>ev]), dotsize, res, color_profile, fn)
+		sset = StrangeSet(Dict([:a=>a, :b=>b, :c=>c, :d=>d, :e=>ev]), dotsize, res, color_profile, fn, flip)
 		JSON.print(cf, JSON.parse(JSON.json(sset)), 4)
 		close(cf)
 
-		params = @sprintf("Params: a=%-2.16f, b=%-2.16f, c=%-2.16f, d=%-2.16f, e=%-2.16f, res=%-2.2d, dotsize = %-2.16f\n",
-		   a, b, c, d, ev, res, dotsize)
+		params = @sprintf("Params: a=%-2.16f, b=%-2.16f, c=%-2.16f, d=%-2.16f, e=%-2.16f, res=%-2.2d, dotsize = %-2.16f, flip =%d\n",
+		   a, b, c, d, ev, res, dotsize, flip)
 		println("$params")
 
-		strange(fn, dotsize, res, Dict([:a=>a,:b=>b, :c=>c, :d=>d, :e=>ev]), color_profile)
+		strange(fn, flip, dotsize, res, Dict([:a=>a,:b=>b, :c=>c, :d=>d, :e=>ev]), color_profile)
 		println("finished generating $fn")
 	end
 end

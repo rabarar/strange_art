@@ -55,18 +55,20 @@ function main()
 			      :r => sp["color_profile"]["r"],
 			      :g => sp["color_profile"]["g"],
 			      :b => sp["color_profile"]["b"]])
+	flip = sp["flip"]
 
-	params = @sprintf("Params: a=%-2.16f, b=%-2.16f, c=%-2.16f, d=%-2.16f, e=%-2.16f, res=%-2.2d, dotsize = %-2.16f\n",
+	params = @sprintf("Params: a=%-2.16f, b=%-2.16f, c=%-2.16f, d=%-2.16f, e=%-2.16f, res=%-2.2d, dotsize = %-2.16f flip=%d\n",
 			  ctrl_params[:a],
 			  ctrl_params[:b],
 			  ctrl_params[:c],
 			  ctrl_params[:d],
 			  ctrl_params[:e],
 			  res,
-			  dot_size)
+			  dot_size,
+			  flip)
 	println("$params")
 
-	strange(outfile, dot_size, res, ctrl_params, color_profile)
+	strange(outfile, flip, dot_size, res, ctrl_params, color_profile)
 	println("finished generating $outfile")
 end
 
