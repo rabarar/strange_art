@@ -8,11 +8,11 @@ run the program from the command line. The output is n files sequentially number
 generated image. Have fun!
 
 ```
-$ julia makestrange.jl -h
+$ julia ./makestrange.jl -h
 usage: makestrange.jl [--basename BASENAME] [--a A] [--b B] [--c C]
                       [--d D] [--e E] [--n N] [--res RES] [--rc RC]
                       [--gc GC] [--bc BC] [--dot_max DOT_MAX]
-                      [--dot_min DOT_MIN] [-h]
+                      [--dot_min DOT_MIN] [--flip FLIP] [-h]
 
 optional arguments:
   --basename BASENAME  strange image and json basename (default:
@@ -38,6 +38,8 @@ optional arguments:
                        2.83)
   --dot_max DOT_MAX    max dotsize (type: Float64, default: 0.65)
   --dot_min DOT_MIN    min dotsize (type: Float64, default: 0.35)
+  --flip FLIP          flip sin and cos in the calculations (type:
+                       Bool, default: false)
   -h, --help           show this help message and exit
 
 
