@@ -1,7 +1,7 @@
 # strange_art
 Luxor-inspired strange art in Julia
 
-![strange art](sample.png "Title")
+![splash image](sample.jpg)
 
 ## Generate cool random strange art using Julia and [Lexor](https://github.com/JuliaGraphics/Luxor.jl)
 
