@@ -48,17 +48,30 @@ optional arguments:
 
 ````
 
-You can edit the json file and regenerate an image using the `generate.jl` program:
+You can edit the json file and regenerate an image using the `generate.jl` program. If `--n` is greater than one, you can generate new json control files that randomize colors with the given ranges and random variance.
 
 ```
-$ julia ./generate.jl --help
-usage: generate.jl [--infile INFILE] [--outfile OUTFILE] [-h]
+$ julia ./generate.jl -h
+usage: generate.jl [--infile INFILE] [--outfile OUTFILE] [--n N]
+                   [--red RED] [--blue BLUE] [--green GREEN]
+                   [--redvar REDVAR] [--bluevar BLUEVAR]
+                   [--greenvar GREENVAR] [-h]
 
 optional arguments:
-  --infile INFILE    parameter input filename (default: "params.json")
-  --outfile OUTFILE  strange image output filename (default:
-                     "regenerate.png")
-  -h, --help         show this help message and exit
+  --infile INFILE      parameter input filename (default:
+                       "params.json")
+  --outfile OUTFILE    strange image output filename (default:
+                       "regenerate.png")
+  --n N                generate n variations of random colors on input
+                       file (type: Int64, default: 1)
+  --red RED            red midpoint (type: Float64, default: 1.0)
+  --blue BLUE          blue midpoint (type: Float64, default: 1.0)
+  --green GREEN        green midpoint (type: Float64, default: 1.0)
+  --redvar REDVAR      red midpoint (type: Float64, default: 0.5)
+  --bluevar BLUEVAR    blue midpoint (type: Float64, default: 0.5)
+  --greenvar GREENVAR  green midpoint (type: Float64, default: 0.5)
+  -h, --help           show this help message and exit
+
 
 ```
 

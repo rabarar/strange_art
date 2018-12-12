@@ -104,6 +104,10 @@ function main()
 	if n > 1
 
 		# override clamp to generate variance
+		if clamp == true
+			println("*** Overriding clamp -> clamp is false to generate color variation across all three channels ***")
+		end
+
 		clamp = false
 		for i in 1:n
 
