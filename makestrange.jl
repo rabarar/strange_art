@@ -104,7 +104,7 @@ function main()
 	flip = parsed_args["flip"]
 
 	# clamp
-	flip = parsed_args["clamp"]
+	clamp = parsed_args["clamp"]
 
 	# generate n png images
 	for i in 1:n
