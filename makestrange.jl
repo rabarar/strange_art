@@ -65,10 +65,10 @@ function parse_commandline()
 	    help = "flip sin and cos in the calculations"
 	    arg_type = Bool
 	    default = false
-	"--clamp"
-	    help = "clamp red and equalize blue green"
-	    arg_type = Bool
-	    default = false
+	"--cmode"
+	    help = "color mode: rgb, clamp, grey"
+	    arg_type = String
+	    default = "rgb"
     end
 
     return parse_args(settings)
@@ -103,8 +103,8 @@ function main()
 	# toggle trig functions
 	flip = parsed_args["flip"]
 
-	# clamp
-	clamp = parsed_args["clamp"]
+	# cmode
+	cmode = parsed_args["cmode"]
 
 	# generate n png images
 	for i in 1:n
@@ -128,16 +128,16 @@ function main()
 		fn_ctrl = @sprintf("%s_%-2.2d.json", basename, i)
 
 		cf = open(fn_ctrl, "w")
-		sset = StrangeSet(Dict([:a=>a, :b=>b, :c=>c, :d=>d, :e=>ev]), dotsize, res, color_profile, fn, flip, clamp)
+		sset = StrangeSet(Dict([:a=>a, :b=>b, :c=>c, :d=>d, :e=>ev]), dotsize, res, color_profile, fn, flip, cmode)
 		JSON.print(cf, JSON.parse(JSON.json(sset)), 4)
 		close(cf)
 
-		params = @sprintf("Params: a=%-2.16f, b=%-2.16f, c=%-2.16f, d=%-2.16f, e=%-2.16f, res=%-2.2d, dotsize = %-2.16f, flip = %d, clamp = %d\n",
-		   a, b, c, d, ev, res, dotsize, flip, clamp)
+		params = @sprintf("Params: a=%-2.16f, b=%-2.16f, c=%-2.16f, d=%-2.16f, e=%-2.16f, res=%-2.2d, dotsize = %-2.16f, flip = %d, cmode = %s\n",
+		   a, b, c, d, ev, res, dotsize, flip, cmode)
 
 		println("$params")
 
-		strange(fn, flip, clamp, dotsize, res, Dict([:a=>a,:b=>b, :c=>c, :d=>d, :e=>ev]), color_profile)
+		strange(fn, flip, cmode, dotsize, res, Dict([:a=>a,:b=>b, :c=>c, :d=>d, :e=>ev]), color_profile)
 		println("finished generating $fn")
 	end
 end

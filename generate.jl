@@ -87,9 +87,9 @@ function main()
 			      :g => sp["color_profile"]["g"],
 			      :b => sp["color_profile"]["b"]])
 	flip = get(sp, "flip", false)
-	clamp = get(sp, "clamp", false)
+	cmode = get(sp, "cmode", "rgb")
 
-	params = @sprintf("Params: a=%-2.16f, b=%-2.16f, c=%-2.16f, d=%-2.16f, e=%-2.16f, res=%-2.2d, dotsize = %-2.16f flip = %d, clamp = %d\n",
+	params = @sprintf("Params: a=%-2.16f, b=%-2.16f, c=%-2.16f, d=%-2.16f, e=%-2.16f, res=%-2.2d, dotsize = %-2.16f flip = %d, cmode = %s\n",
 			  ctrl_params[:a],
 			  ctrl_params[:b],
 			  ctrl_params[:c],
@@ -98,17 +98,13 @@ function main()
 			  res,
 			  dot_size,
 			  flip,
-			  clamp)
+			  cmode)
 	println("$params")
 
 	if n > 1
 
-		# override clamp to generate variance
-		if clamp == true
-			println("*** Overriding clamp -> clamp is false to generate color variation across all three channels ***")
-		end
-
-		clamp = false
+		# override cmode if generating more than one pic
+		cmode = "rgb"
 		for i in 1:n
 
 			imagefile = @sprintf("%s_%-2.2d.png", outfile, i)
@@ -122,15 +118,15 @@ function main()
 					     ])
 
 			cf = open(jsonfile, "w")
-                	sset = StrangeSet(ctrl_params, dot_size, res, color_profile, imagefile, flip, clamp)
+                	sset = StrangeSet(ctrl_params, dot_size, res, color_profile, imagefile, flip, cmode)
                 	JSON.print(cf, JSON.parse(JSON.json(sset)), 4)
                 	close(cf)
 
-			strange(imagefile, flip, clamp, dot_size, res, ctrl_params, color_profile)
+			strange(imagefile, flip, cmode, dot_size, res, ctrl_params, color_profile)
 		end
 	else
 		println("outputfile: $outfile")
-		strange(outfile, flip, clamp, dot_size, res, ctrl_params, color_profile)
+		strange(outfile, flip, cmode, dot_size, res, ctrl_params, color_profile)
 	end
 	println("finished generating $outfile")
 end

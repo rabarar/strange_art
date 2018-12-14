@@ -12,13 +12,42 @@ struct StrangeSet
 	color_profile::Dict{Symbol,Float64}
 	filename::String
 	flip::Bool
-	clamp::Bool
+	cmode::String
+end
+
+struct CMode{s} end
+
+function cmode_symbol(::CMode{s}) where s
+	     (s ∈ [:rgb, :clamp, :grey, :gray] ? s : throw(error("wrong mode, $s")))
+
+	     if s == :rgb
+		     "rgb"
+	     elseif s == :clamp
+		     "clamp"
+	     elseif s == :grey || s == :gray
+		     "grey"
+	     end
+end
+
+function cmode_string(mode) 
+	if ! in(mode, ["rgb", "clamp", "grey", "gray"])
+		throw(error("invalid mode string: $mode"))
+	else
+		if mode == "rgb"
+			:rgb
+		elseif mode == "clamp"
+			:clamp
+		elseif mode == "grey" || mode == "gray"
+			:grey
+		end
+	end
 end
 
 function rs()
 	(-1.0)^convert(Int64,floor((rand()*1000.0))) % 2
 end
-function strange(fn, flip, clamp, dotsize, w=800.0,
+
+function strange(fn, flip, cmode, dotsize, w=800.0,
 		 ctrl=Dict([:a=>2.24 + rs()*rand()*0.5, :b=>0.43, :c => -0.65, :d=>-2.43 + rs()*rand()*0.25, :e=> 1.0]),
 		 colors=Dict([:r=>.7, :g=>0.5, :b=>.8]),
 		 mode=:fill)
@@ -57,15 +86,18 @@ function strange(fn, flip, clamp, dotsize, w=800.0,
                        xpos = rescale(xx, xmin, xmax, -wover2, wover2) # scale to range
                        ypos = rescale(yy, ymin, ymax, -wover2, wover2) # scale to range
 
-		       if !clamp
+		       if cmode_string(cmode) == :rgb
 			       rcolor = rescale(xx, -1, 1, 0.0, colors[:r])
 			       gcolor = rescale(yy, -1, 1, 0.0, colors[:g])
 			       bcolor = rescale(zz, -1, 1, 0.0, colors[:b])
 			       setcolor(convert(Colors.HSV, Colors.RGB(rcolor, gcolor, bcolor)))
-		       else
+		       elseif cmode_string(cmode) == :clamp
 			       rcolor = rescale(xx, -1, 1, 0.0, colors[:r])
 			       gcolor = rescale(yy, -1, 1, 0.0, colors[:g])
 			       setcolor(convert(Colors.HSV, Colors.RGB(rcolor, gcolor, gcolor)))
+		       elseif cmode_string(cmode) == :grey 
+			       rcolor = rescale(yy, -1, 1, 0.0, colors[:r])
+			       setcolor(convert(Colors.HSV, Colors.RGB(rcolor, rcolor, rcolor)))
 		       end
                        circle(Point(xpos, ypos), dotsize, mode)
                    end
